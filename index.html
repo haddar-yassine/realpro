@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FormaGusto</title>
+  <link rel="icon" type="image/x-icon" href="C:\Users\yassi\OneDrive\Desktop\htmlproject\favicon.ico">
+  <style>
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    :root{
+      --green:#1a4a1f;--green-light:#2d7a35;
+      --yellow:#f5c842;--yellow-dark:#e6a800;
+      --cream:#fdf9f0;--white:#ffffff;
+      --grey:#6b7280;--light:#f0ebe0;--border:#e5ddd0;--red:#e53e3e;
+    }
+    html{scroll-behavior:smooth}
+    body{font-family:'Nunito',sans-serif;background:var(--cream);color:var(--green);min-height:100vh}
+
+    /* NAV */
+    nav{position:sticky;top:0;z-index:200;background:var(--green);display:flex;align-items:center;justify-content:space-between;padding:0.8rem 2.5rem;box-shadow:0 2px 12px rgba(0,0,0,0.18)}
+    .nav-logo{display:flex;align-items:center;gap:0.9rem;text-decoration:none}
+    .nav-logo img{width:56px;height:56px;object-fit:contain;border-radius:50%;background:#fff;padding:2px}
+    .nav-brand{font-family:'Playfair Display',serif;font-size:1.4rem;color:var(--yellow);font-weight:700;line-height:1.1}
+    .nav-brand small{display:block;font-family:'Nunito',sans-serif;font-size:0.65rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:rgba(255,255,255,0.7);font-style:normal}
+    .nav-right{display:flex;align-items:center;gap:1.5rem}
+    .nav-links{display:flex;gap:1.5rem;list-style:none}
+    .nav-links a{font-size:0.82rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.85);text-decoration:none;transition:color 0.2s}
+    .nav-links a:hover{color:var(--yellow)}
+    .cart-btn{position:relative;background:var(--yellow);color:var(--green);border:none;border-radius:50px;padding:0.55rem 1.2rem;font-family:'Nunito',sans-serif;font-size:0.82rem;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:0.5rem;transition:background 0.2s}
+    .cart-btn:hover{background:var(--yellow-dark)}
+    .cart-count{position:absolute;top:-6px;right:-6px;background:var(--red);color:#fff;border-radius:50%;width:18px;height:18px;font-size:0.65rem;font-weight:800;display:flex;align-items:center;justify-content:center}
+    .cart-count.hidden{display:none}
+
+    /* HERO */
+    .hero{
+    position:relative;
+    color:#000000;
+    padding:3.5rem 2.5rem;
+    text-align:center;
+    overflow:hidden;
+    min-height:400px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+    /* Video background */
+    .hero-video{
+        position:absolute;
+        top:0;
+        left:0;
+        width:100%;
+        height:100%;
+        object-fit:cover;
+        z-index:0;
+    }
+    /* Dark overlay */
+    .hero::before{
+        content:"";
+        position:absolute;
+        inset:0;
+        background:rgba(0,0,0,0.45);
+        z-index:1;
+    }
+    /* Content above video */
+    .hero-content{
+        position:relative;
+        color: #ffffff;
+        z-index:2;
+    }
+    /* MAIN */
+    main{max-width:1200px;margin:0 auto;padding:2.5rem 1.5rem}
+    .section-title{font-family:'Playfair Display',serif;font-size:1.8rem;color:var(--green);margin-bottom:0.3rem}
+    .section-title em{font-style:italic;color:var(--green-light)}
+    .section-sub{font-size:0.85rem;color:var(--grey);margin-bottom:2rem;font-weight:600}
+
+    /* PRODUCTS GRID */
+    .products-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.8rem;margin-bottom:4rem}
+    .product-card{background:var(--white);border-radius:16px;overflow:hidden;border:2px solid var(--border);transition:transform 0.25s,box-shadow 0.25s,border-color 0.25s;display:flex;flex-direction:column}
+    .product-card:hover{transform:translateY(-4px);box-shadow:0 12px 32px rgba(26,74,31,0.12);border-color:var(--green-light)}
+    .product-img{height:200px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+    .product-img svg{width:140px;height:140px;filter:drop-shadow(0 4px 12px rgba(0,0,0,0.15))}
+    .product-img-bg{position:absolute;inset:0;opacity:0.08}
+    .product-body{padding:1.4rem;flex:1;display:flex;flex-direction:column;gap:1rem}
+    .product-header{display:flex;justify-content:space-between;align-items:flex-start;gap:0.5rem}
+    .product-name{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;color:var(--green)}
+    .product-category{font-size:0.7rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--green-light);background:#e8f5e9;padding:0.2rem 0.6rem;border-radius:50px;white-space:nowrap}
+
+    /* PRICE */
+    .price-info{background:var(--cream);border-radius:10px;padding:0.8rem;border:1px solid var(--border)}
+    .price-per100{font-size:0.75rem;font-weight:600;color:var(--grey);margin-bottom:0.3rem}
+    .price-per100 strong{color:var(--green);font-size:0.9rem}
+    .price-total{font-size:1.1rem;font-weight:800;color:var(--green)}
+    .price-total span{font-size:0.75rem;font-weight:600;color:var(--grey)}
+
+    /* SELECTOR */
+    .selector-group{display:flex;flex-direction:column;gap:0.4rem}
+    .selector-label{font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--grey)}
+    .size-btns{display:flex;gap:0.5rem;flex-wrap:wrap}
+    .size-btn{flex:1;min-width:60px;padding:0.45rem;border:2px solid var(--border);border-radius:8px;background:var(--white);font-family:'Nunito',sans-serif;font-size:0.82rem;font-weight:700;color:var(--grey);cursor:pointer;transition:all 0.18s}
+    .size-btn.active,.size-btn:hover{border-color:var(--green);background:var(--green);color:#fff}
+
+    /* GRAM INPUT */
+    .gram-input-wrap{display:flex;align-items:center;gap:0.5rem}
+    .gram-input{width:100%;padding:0.5rem 0.7rem;border:2px solid var(--border);border-radius:8px;font-family:'Nunito',sans-serif;font-size:0.9rem;font-weight:700;color:var(--green);background:var(--white);outline:none;transition:border-color 0.2s}
+    .gram-input:focus{border-color:var(--green-light)}
+    .gram-input::placeholder{color:#bbb;font-weight:400}
+    .gram-unit{font-size:0.85rem;font-weight:700;color:var(--grey);flex-shrink:0}
+
+    /* PIECE INPUT */
+    .piece-input-wrap{display:flex;align-items:center;gap:0.6rem;border:2px solid var(--border);border-radius:8px;overflow:hidden;background:var(--white)}
+    .piece-minus,.piece-plus{background:none;border:none;width:36px;height:36px;font-size:1.2rem;font-weight:800;color:var(--green);cursor:pointer;transition:background 0.15s;display:flex;align-items:center;justify-content:center}
+    .piece-minus:hover,.piece-plus:hover{background:var(--green);color:#fff}
+    .piece-num{flex:1;text-align:center;font-size:0.95rem;font-weight:800;color:var(--green)}
+
+    /* FLAVOR */
+    .flavor-select{width:100%;padding:0.5rem 0.7rem;border:2px solid var(--border);border-radius:8px;font-family:'Nunito',sans-serif;font-size:0.85rem;font-weight:600;color:var(--green);background:var(--white);cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%231a4a1f' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 0.8rem center;padding-right:2rem}
+    .flavor-select:focus{outline:none;border-color:var(--green-light)}
+
+    .add-btn{margin-top:auto;width:100%;padding:0.75rem;border:none;border-radius:10px;background:var(--green);color:#fff;font-family:'Nunito',sans-serif;font-size:0.9rem;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:0.5rem;transition:background 0.2s,transform 0.15s}
+    .add-btn:hover{background:var(--green-light);transform:scale(1.02)}
+    .add-btn:active{transform:scale(0.98)}
+    .add-btn.added{background:#16a34a}
+
+    /* FIXED PRICE TAG */
+    .fixed-price-tag{background:var(--yellow);color:var(--green);border-radius:8px;padding:0.5rem 0.8rem;font-size:1rem;font-weight:800;text-align:center}
+    .fixed-price-tag small{display:block;font-size:0.7rem;font-weight:600;color:rgba(26,74,31,0.7)}
+
+    /* CART DRAWER */
+    .cart-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:300;opacity:0;pointer-events:none;transition:opacity 0.3s}
+    .cart-overlay.open{opacity:1;pointer-events:all}
+    .cart-drawer{position:fixed;top:0;right:0;height:100%;width:min(420px,100vw);background:var(--white);z-index:301;transform:translateX(100%);transition:transform 0.35s cubic-bezier(0.4,0,0.2,1);display:flex;flex-direction:column;box-shadow:-4px 0 30px rgba(0,0,0,0.15)}
+    .cart-drawer.open{transform:translateX(0)}
+    .cart-header{padding:1.3rem 1.5rem;background:var(--green);color:#fff;display:flex;justify-content:space-between;align-items:center}
+    .cart-header h2{font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--yellow)}
+    .cart-close{background:none;border:none;color:#fff;font-size:1.5rem;cursor:pointer;line-height:1;padding:0.2rem}
+    .cart-items{flex:1;overflow-y:auto;padding:1rem 1.5rem;display:flex;flex-direction:column;gap:0.8rem}
+    .cart-empty{text-align:center;padding:3rem 1rem;color:var(--grey)}
+    .cart-empty p{font-size:0.9rem;font-weight:600;margin-top:0.5rem}
+    .cart-item{display:flex;gap:1rem;align-items:flex-start;background:var(--cream);border-radius:12px;padding:0.9rem;border:1px solid var(--border)}
+    .cart-item-icon{width:48px;height:48px;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:var(--white);border-radius:8px;padding:4px;font-size:1.8rem}
+    .cart-item-info{flex:1;min-width:0}
+    .cart-item-name{font-weight:800;font-size:0.9rem;color:var(--green);margin-bottom:0.15rem}
+    .cart-item-detail{font-size:0.75rem;color:var(--grey);font-weight:600}
+    .cart-item-right{display:flex;flex-direction:column;align-items:flex-end;gap:0.5rem;flex-shrink:0}
+    .cart-item-price{font-weight:800;font-size:0.95rem;color:var(--green)}
+    .cart-item-qty{display:flex;align-items:center;gap:0.4rem}
+    .qty-btn{width:24px;height:24px;border-radius:50%;border:2px solid var(--border);background:var(--white);font-size:0.9rem;font-weight:800;color:var(--green);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;line-height:1}
+    .qty-btn:hover{border-color:var(--green);background:var(--green);color:#fff}
+    .qty-num{font-size:0.85rem;font-weight:800;color:var(--green);min-width:20px;text-align:center}
+    .remove-btn{background:none;border:none;color:#ccc;cursor:pointer;font-size:1rem;transition:color 0.15s}
+    .remove-btn:hover{color:var(--red)}
+    .cart-footer{padding:1.2rem 1.5rem;border-top:2px solid var(--border);background:var(--cream)}
+    .cart-subtotal{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
+    .cart-subtotal span{font-size:0.85rem;font-weight:700;color:var(--grey)}
+    .cart-subtotal strong{font-size:1.3rem;font-weight:800;color:var(--green)}
+    .checkout-btn{width:100%;padding:0.9rem;border:none;border-radius:12px;background:var(--yellow);color:var(--green);font-family:'Nunito',sans-serif;font-size:1rem;font-weight:800;cursor:pointer;transition:background 0.2s}
+    .checkout-btn:hover{background:var(--yellow-dark)}
+
+    /* TOAST */
+    .toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(80px);background:var(--green);color:#fff;padding:0.7rem 1.5rem;border-radius:50px;font-size:0.85rem;font-weight:700;box-shadow:0 4px 16px rgba(0,0,0,0.2);transition:transform 0.35s,opacity 0.35s;opacity:0;z-index:400;white-space:nowrap}
+    .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+
+    /* ERROR */
+    .input-error{border-color:var(--red)!important}
+    .error-msg{font-size:0.72rem;color:var(--red);font-weight:700;display:none}
+    .error-msg.show{display:block}
+
+.footer-title {
+  display: block;
+  text-align: center;
+  margin-bottom: 10px;
+}
+.footer-links {
+  margin-top: 12px;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.social-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  background: white;
+  color: var(--green);
+  padding: 12px 20px;
+  border-radius: 10px;
+
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.8rem;
+
+  transition: 0.3s;
+}
+
+.social-btn i {
+  font-size: 1.6rem;
+}
+
+/* facebook special color (optional) */
+.facebook:hover {
+  background: #0e14dc;
+  color: rgb(255, 255, 255);
+}
+/* instagram special color (optional) */
+.instagram:hover {
+  background: #b65d0f;
+  color: rgb(255, 255, 255);
+}
+
+/* WhatsApp special color (optional) */
+.whatsapp:hover {
+  background: #25D366;
+  color: white;
+}
+html {
+  scroll-behavior: smooth;
+}
+.arrow {
+  font-size: 40px;
+  color: rgb(18, 76, 36);          /* IMPORTANT: visible color */
+  text-align: center;
+  display: block;
+  margin: 10px 0;
+
+  animation: moveArrow 1s infinite;
+}
+
+@keyframes moveArrow {
+  0% { transform: translateX(0); }
+  50% { transform: translateX(10px); }
+  100% { transform: translateX(0); }
+}
+
+    @media(max-width:640px){
+      nav{padding:0.7rem 1rem}
+      .nav-links{display:none}
+      .hero{padding:2rem 1rem}
+      main{padding:1.5rem 1rem}
+      .products-grid{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="nav-logo">
+    <img src="logo.png" alt="Forma Gusto Logo"/>
+    <div class="nav-brand">Forma Gusto<small>Produits laitiers</small></div>
+  </a>
+  <div class="nav-right">
+    <ul class="nav-links">
+      <li><a href="#produits">Produits</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <button class="cart-btn" onclick="openCart()">
+      🛒 Panier
+      <span class="cart-count hidden" id="cartCount">0</span>
+    </button>
+  </div>
+</nav>
+
+<div class="hero">
+  <video controls class="hero-video" autoplay muted loop playsinline>
+    <source src="video.mp4" type="video/mp4">
+  </video>
+  <div class="hero-content">
+    <h1>Fraîcheur & Qualité Premium</h1>
+    <p>fabriqués artisanalement chaque jour</p>
+  </div>
+</div>
+
+<main id="produits">
+  <div class="section-title"><em>Nos</em> Produits</div>
+  <p class="section-sub">Choisissez votre quantité, saveur et ajoutez au panier</p>
+  <div class="products-grid" id="productsGrid"></div>
+</main>
+
+<footer id="contact">
+
+  <span class="footer-title">
+    Forma Gusto — Fait avec soin, sans ingrédients artificiels
+  </span>
+  
+
+  <div class="footer-links">
+
+    <span class="arrow">➜</span>
+
+    <a href="https://www.facebook.com/profile.php?id=61559878975856" target="_blank" class="social-btn facebook">
+      <i class="fab fa-facebook-f"></i> Facebook
+    </a>
+
+    <a href="https://www.instagram.com/formagusto/" target="_blank" class="social-btn instagram">
+      <i class="fab fa-instagram"></i> Instagram
+    </a>
+
+    <a href="https://wa.me/21651375007" target="_blank" class="social-btn whatsapp">
+      <i class="fab fa-whatsapp"></i> WhatsApp
+    </a>
+
+  </div>
+
+</footer>
+<div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
+<div class="cart-drawer" id="cartDrawer">
+  <div class="cart-header">
+    <h2>🛒 Votre Panier</h2>
+    <button class="cart-close" onclick="closeCart()">✕</button>
+  </div>
+  <div class="cart-items" id="cartItems"></div>
+  <div class="cart-footer" id="cartFooter" style="display:none">
+    <div class="cart-subtotal">
+      <span>Total</span>
+      <strong id="cartTotal">0,00 DT</strong>
+    </div>
+    <button class="checkout-btn">Passer la commande →</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ─────────────────────────────────────────
+//  PRODUCT DEFINITIONS
+//  quantityType:
+//    'gram'  → client types custom grams, price = pricesPer100g * g / 100
+//    'size'  → fixed size buttons (200g/500g), price = pricesPer100g * g / 100
+//    'piece' → client picks number of pieces, price = pricePerPiece * qty
+//    'fixed' → single fixed price (no size choice)
+// ─────────────────────────────────────────
+const PRODUCTS = [
+  {
+    id: 'mozzarella',
+    name: 'Mozzarella',
+    category: 'Fromage frais',
+    emoji: '🧀',
+    color: '#fffbe6', bgColor: '#f5c842',
+    quantityType: 'gram',
+    pricesPer100g: 2.8,   // DT per 100g
+    flavors: [],
+    svg: `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><ellipse cx="50" cy="60" rx="36" ry="26" fill="#fff8e1" stroke="#f5c842" stroke-width="2"/><ellipse cx="50" cy="54" rx="33" ry="23" fill="#fffde7" stroke="#f5c842" stroke-width="1.5"/><ellipse cx="50" cy="47" rx="29" ry="20" fill="white" stroke="#f0e68c" stroke-width="1"/><ellipse cx="41" cy="43" rx="5" ry="3" fill="#f5f5f5"/><ellipse cx="58" cy="49" rx="4" ry="2.5" fill="#f5f5f5"/><ellipse cx="46" cy="55" rx="3" ry="2" fill="#f5f5f5"/></svg>`
+  },
+  {
+    id: 'rigouta',
+    name: 'Rigouta',
+    category: 'Fromage frais',
+    emoji: '🫙',
+    color: '#f0f8f0', bgColor: '#2d7a35',
+    quantityType: 'gram',
+    pricesPer100g: 1.9,
+    flavors: [],
+    svg: `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect x="22" y="32" width="56" height="48" rx="8" fill="#f5f5f5" stroke="#ddd" stroke-width="1.5"/><rect x="27" y="37" width="46" height="38" rx="6" fill="white"/><line x1="27" y1="50" x2="73" y2="50" stroke="#eee" stroke-width="1.5"/><line x1="27" y1="63" x2="73" y2="63" stroke="#eee" stroke-width="1.5"/><line x1="47" y1="37" x2="47" y2="75" stroke="#eee" stroke-width="1.5"/><ellipse cx="50" cy="24" rx="17" ry="11" fill="#e8f5e9" stroke="#2d7a35" stroke-width="1.5"/><text x="50" y="28" text-anchor="middle" font-size="9" fill="#2d7a35" font-weight="bold">frais</text></svg>`
+  },
+  {
+    id: 'edam',
+    name: 'Édam',
+    category: 'Fromage',
+    emoji: '🧀',
+    color: '#fff8e1', bgColor: '#e6a800',
+    quantityType: 'gram',
+    pricesPer100g: 3.2,
+    flavors: [],
+    svg: `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><ellipse cx="50" cy="57" rx="35" ry="24" fill="#f5c842" stroke="#e6a800" stroke-width="2"/><ellipse cx="50" cy="50" rx="33" ry="22" fill="#fdd835" stroke="#f5c842" stroke-width="1.5"/><circle cx="38" cy="46" r="4" fill="#f5c842" stroke="#e6a800" stroke-width="1"/><circle cx="56" cy="51" r="3" fill="#f5c842" stroke="#e6a800" stroke-width="1"/><circle cx="44" cy="57" r="3.5" fill="#f5c842" stroke="#e6a800" stroke-width="1"/><circle cx="63" cy="43" r="2.5" fill="#f5c842" stroke="#e6a800" stroke-width="1"/></svg>`
+  },
+  {
+    id: 'yaourt',
+    name: 'Yaourt',
+    category: 'Laitage',
+    emoji: '🥛',
+    color: '#fff3e0', bgColor: '#f5c842',
+    quantityType: 'size',
+    sizes: ['200g','500g'],
+    pricesPer100g: { '200g': 1.5, '500g': 1.3 },
+    flavors: ['Fraise','Citron','Naturel (sans sucre)','Normal'],
+    svg: `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect x="28" y="35" width="44" height="48" rx="6" fill="#fff8e1" stroke="#f5c842" stroke-width="2"/><rect x="24" y="30" width="52" height="12" rx="4" fill="#f5c842"/><rect x="30" y="33" width="40" height="6" rx="3" fill="#ffe082"/><text x="50" y="66" text-anchor="middle" font-size="24">🥛</text></svg>`
+  },
+  {
+    id: 'tiramisu',
+    name: 'Tiramisu',
+    category: 'Dessert',
+    emoji: '🍮',
+    color: '#fdf5e6', bgColor: '#8B4513',
+    quantityType: 'piece',
+    pricePerPiece: 4.5,
+    flavors: ['Chocolat','Pistache','Framboise','Noisette','Caramel'],
+    svg: `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect x="18" y="45" width="64" height="35" rx="6" fill="#d4a574" stroke="#8B4513" stroke-width="1.5"/><rect x="18" y="35" width="64" height="15" rx="4" fill="#f5deb3" stroke="#c8a96e" stroke-width="1.5"/><rect x="18" y="25" width="64" height="15" rx="4" fill="#fffaf0" stroke="#ddd" stroke-width="1.5"/><rect x="22" y="27" width="56" height="3" rx="2" fill="#8B4513" opacity="0.3"/><rect x="22" y="33" width="56" height="3" rx="2" fill="#8B4513" opacity="0.2"/><text x="50" y="70" text-anchor="middle" font-size="10" fill="#5c3317" font-weight="bold">Tiramisu</text></svg>`
+  },
+  {
+    id: 'fromage',
+    name: 'Fromage',
+    category: 'Fromage',
+    emoji: '🧀',
+    color: '#fffde7', bgColor: '#f9a825',
+    quantityType: 'size',
+    sizes: ['200g','500g'],
+    pricesPer100g: { '200g': 2.5, '500g': 2.2 },
+    flavors: [],
+    svg: `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><polygon points="50,20 85,70 15,70" fill="#fdd835" stroke="#f9a825" stroke-width="2"/><polygon points="50,20 85,70 15,70" fill="url(#cheeseGrad)"/><defs><linearGradient id="cheeseGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#fff176"/><stop offset="100%" stop-color="#fdd835"/></linearGradient></defs><ellipse cx="40" cy="52" rx="5" ry="4" fill="#f9a825" opacity="0.5"/><ellipse cx="60" cy="58" rx="4" ry="3" fill="#f9a825" opacity="0.5"/><ellipse cx="50" cy="45" rx="3" ry="2.5" fill="#f9a825" opacity="0.5"/><rect x="15" y="68" width="70" height="10" rx="3" fill="#f9a825" stroke="#e65100" stroke-width="1"/></svg>`
+  },
+  {
+    id: 'biscuit',
+    name: 'Biscuits',
+    category: 'Pâtisserie',
+    emoji: '🍪',
+    color: '#fdf0e0', bgColor: '#cd8a3a',
+    quantityType: 'size',
+    sizes: ['200g','500g'],
+    pricesPer100g: { '200g': 2.0, '500g': 1.8 },
+    flavors: [],
+    svg: `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="35" cy="45" r="20" fill="#d4956a" stroke="#a0522d" stroke-width="1.5"/><circle cx="35" cy="45" r="17" fill="#cd8a3a"/><circle cx="29" cy="40" r="2.5" fill="#7b3f00"/><circle cx="39" cy="38" r="2" fill="#7b3f00"/><circle cx="33" cy="50" r="2.5" fill="#7b3f00"/><circle cx="43" cy="48" r="2" fill="#7b3f00"/><circle cx="65" cy="62" r="18" fill="#d4956a" stroke="#a0522d" stroke-width="1.5"/><circle cx="65" cy="62" r="15" fill="#cd8a3a"/><circle cx="59" cy="57" r="2.5" fill="#7b3f00"/><circle cx="69" cy="56" r="2" fill="#7b3f00"/><circle cx="62" cy="67" r="2.5" fill="#7b3f00"/><circle cx="72" cy="65" r="2" fill="#7b3f00"/></svg>`
+  },
+  {
+    id: 'jus_citron',
+    name: 'Jus Citron',
+    category: 'Boisson',
+    emoji: '🍋',
+    color: '#fffde7', bgColor: '#f9d71c',
+    quantityType: 'size',
+    sizes: ['200ml','500ml','1L'],
+    pricesPer100g: { '200ml': 0.9, '500ml': 0.75, '1L': 0.6 },
+    flavors: [],
+    svg: `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><ellipse cx="50" cy="55" rx="28" ry="32" fill="#fff176" stroke="#f9d71c" stroke-width="2"/><ellipse cx="50" cy="52" rx="25" ry="28" fill="#ffee58"/><path d="M50 24 Q58 38 50 52 Q42 38 50 24Z" fill="#fff176" opacity="0.6"/><ellipse cx="50" cy="24" rx="8" ry="4" fill="#aed581" stroke="#7cb342" stroke-width="1.5"/><ellipse cx="50" cy="55" rx="20" ry="22" fill="#fff9c4" opacity="0.5"/></svg>`
+  }
+];
+
+// ── STATE ──
+let cart = [];
+let pieceCounts = {};
+PRODUCTS.forEach(p => { if(p.quantityType==='piece') pieceCounts[p.id]=1; });
+
+// ── HELPERS ──
+function formatPrice(val){
+  return parseFloat(val).toFixed(2).replace('.',',')+' DT';
+}
+
+function calcGramPrice(product, grams){
+  const g = parseFloat(grams)||0;
+  return (product.pricesPer100g * g / 100);
+}
+
+function calcSizePrice(product, size){
+  const g = parseInt(size);
+  return (product.pricesPer100g[size] * g / 100);
+}
+
+// ── RENDER PRODUCTS ──
+function renderProducts(){
+  const grid = document.getElementById('productsGrid');
+  grid.innerHTML = PRODUCTS.map(p => buildCard(p)).join('');
+}
+
+function buildCard(p){
+  let quantityHTML = '';
+  let priceHTML = '';
+
+  if(p.quantityType === 'gram'){
+    quantityHTML = `
+      <div class="selector-group">
+        <div class="selector-label">Quantité</div>
+        <div class="gram-input-wrap">
+          <input class="gram-input" type="number" id="gram-${p.id}" min="1" max="5000"
+            placeholder="ex : 250" oninput="onGramInput('${p.id}')"/>
+          <span class="gram-unit">g</span>
+        </div>
+        <span class="error-msg" id="err-${p.id}">Veuillez saisir une quantité valide</span>
+      </div>`;
+    priceHTML = `
+      <div class="price-info" id="priceInfo-${p.id}">
+        <div class="price-per100">Prix / 100g : <strong>${formatPrice(p.pricesPer100g)}</strong></div>
+        <div class="price-total" id="priceTotal-${p.id}">Entrez une quantité</div>
+      </div>`;
+  }
+  else if(p.quantityType === 'size'){
+    const defSize = p.sizes[0];
+    const defPrice = calcSizePrice(p, defSize);
+    const defPer100 = p.pricesPer100g[defSize];
+    quantityHTML = `
+      <div class="selector-group">
+        <div class="selector-label">Taille</div>
+        <div class="size-btns">
+          ${p.sizes.map((s,i)=>`<button class="size-btn ${i===0?'active':''}" onclick="selectSize('${p.id}','${s}',this)">${s}</button>`).join('')}
+        </div>
+      </div>`;
+    priceHTML = `
+      <div class="price-info" id="priceInfo-${p.id}">
+        <div class="price-per100">Prix / 100g : <strong id="per100-${p.id}">${formatPrice(defPer100)}</strong></div>
+        <div class="price-total" id="priceTotal-${p.id}">${formatPrice(defPrice)}<span> / ${defSize}</span></div>
+      </div>`;
+  }
+  else if(p.quantityType === 'piece'){
+    priceHTML = `
+      <div class="price-info" id="priceInfo-${p.id}">
+        <div class="price-per100">Prix / pièce : <strong>${formatPrice(p.pricePerPiece)}</strong></div>
+        <div class="price-total" id="priceTotal-${p.id}">${formatPrice(p.pricePerPiece)}<span> / 1 pièce</span></div>
+      </div>`;
+    quantityHTML = `
+      <div class="selector-group">
+        <div class="selector-label">Nombre de pièces</div>
+        <div class="piece-input-wrap">
+          <button class="piece-minus" onclick="changePiece('${p.id}',-1)">−</button>
+          <span class="piece-num" id="piece-${p.id}">1</span>
+          <button class="piece-plus" onclick="changePiece('${p.id}',1)">+</button>
+        </div>
+      </div>`;
+  }
+  else if(p.quantityType === 'fixed'){
+    priceHTML = `<div class="fixed-price-tag">${formatPrice(p.fixedPrice)}<small>Prix fixe</small></div>`;
+  }
+
+  const flavorHTML = p.flavors.length > 0 ? `
+    <div class="selector-group">
+      <div class="selector-label">Saveur</div>
+      <select class="flavor-select" id="flavor-${p.id}">
+        ${p.flavors.map(f=>`<option value="${f}">${f}</option>`).join('')}
+      </select>
+    </div>` : '';
+
+  return `
+    <div class="product-card" id="card-${p.id}" data-size="${p.sizes?p.sizes[0]:''}">
+      <div class="product-img" style="background:${p.color}">
+        <div class="product-img-bg" style="background:${p.bgColor}"></div>
+        ${p.svg}
+      </div>
+      <div class="product-body">
+        <div class="product-header">
+          <span class="product-name">${p.name}</span>
+          <span class="product-category">${p.category}</span>
+        </div>
+        ${priceHTML}
+        ${quantityHTML}
+        ${flavorHTML}
+        <button class="add-btn" id="addBtn-${p.id}" onclick="addToCart('${p.id}')">
+          <span>+</span> Ajouter au panier
+        </button>
+      </div>
+    </div>`;
+}
+
+// ── GRAM INPUT ──
+function onGramInput(pid){
+  const product = PRODUCTS.find(p=>p.id===pid);
+  const val = parseFloat(document.getElementById('gram-'+pid).value)||0;
+  const totalEl = document.getElementById('priceTotal-'+pid);
+  const errEl = document.getElementById('err-'+pid);
+  if(val>0){
+    const price = calcGramPrice(product, val);
+    totalEl.innerHTML = `${formatPrice(price)}<span> / ${val}g</span>`;
+    totalEl.style.color='var(--green)';
+    errEl.classList.remove('show');
+    document.getElementById('gram-'+pid).classList.remove('input-error');
+  } else {
+    totalEl.textContent = 'Entrez une quantité';
+    totalEl.style.color='var(--grey)';
+  }
+}
+
+// ── SIZE SELECT ──
+function selectSize(pid, size, btn){
+  const product = PRODUCTS.find(p=>p.id===pid);
+  btn.closest('.size-btns').querySelectorAll('.size-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('card-'+pid).dataset.size = size;
+  const price = calcSizePrice(product, size);
+  const per100El = document.getElementById('per100-'+pid);
+  if(per100El) per100El.textContent = formatPrice(product.pricesPer100g[size]);
+  document.getElementById('priceTotal-'+pid).innerHTML = `${formatPrice(price)}<span> / ${size}</span>`;
+}
+
+// ── PIECE COUNT ──
+function changePiece(pid, delta){
+  const product = PRODUCTS.find(p=>p.id===pid);
+  pieceCounts[pid] = Math.max(1, (pieceCounts[pid]||1)+delta);
+  document.getElementById('piece-'+pid).textContent = pieceCounts[pid];
+  const price = product.pricePerPiece * pieceCounts[pid];
+  document.getElementById('priceTotal-'+pid).innerHTML =
+    `${formatPrice(price)}<span> / ${pieceCounts[pid]} pièce${pieceCounts[pid]>1?'s':''}</span>`;
+}
+
+// ── ADD TO CART ──
+function addToCart(pid){
+  const product = PRODUCTS.find(p=>p.id===pid);
+  let qty = 1, size = '', price = 0, detail = '';
+
+  if(product.quantityType === 'gram'){
+    const gramEl = document.getElementById('gram-'+pid);
+    const grams = parseFloat(gramEl.value)||0;
+    if(grams <= 0){
+      gramEl.classList.add('input-error');
+      document.getElementById('err-'+pid).classList.add('show');
+      return;
+    }
+    price = calcGramPrice(product, grams);
+    size = grams+'g';
+    detail = grams+'g';
+  }
+  else if(product.quantityType === 'size'){
+    size = document.getElementById('card-'+pid).dataset.size || product.sizes[0];
+    price = calcSizePrice(product, size);
+    detail = size;
+  }
+  else if(product.quantityType === 'piece'){
+    qty = pieceCounts[pid]||1;
+    price = product.pricePerPiece * qty;
+    size = qty+' pièce'+(qty>1?'s':'');
+    detail = size;
+    // reset to 1
+    pieceCounts[pid]=1;
+    document.getElementById('piece-'+pid).textContent='1';
+    document.getElementById('priceTotal-'+pid).innerHTML=`${formatPrice(product.pricePerPiece)}<span> / 1 pièce</span>`;
+  }
+  else if(product.quantityType === 'fixed'){
+    price = product.fixedPrice;
+    detail = 'Prix fixe';
+  }
+
+  const flavor = document.getElementById('flavor-'+pid) ? document.getElementById('flavor-'+pid).value : '';
+  const key = `${pid}-${size}-${flavor}-${Date.now()}`;
+
+  cart.push({ key, pid, name: product.name, emoji: product.emoji, size, flavor, price, qty: 1, detail });
+
+  updateCartUI();
+  flashBtn(pid);
+  showToast(`${product.name} (${detail}${flavor?' · '+flavor:''}) ajouté !`);
+}
+
+// ── CART ──
+function removeFromCart(key){ cart=cart.filter(i=>i.key!==key); updateCartUI(); renderCartItems(); }
+
+function changeQty(key, delta){
+  const item = cart.find(i=>i.key===key);
+  if(!item) return;
+  item.qty+=delta;
+  if(item.qty<=0) removeFromCart(key);
+  else { updateCartUI(); renderCartItems(); }
+}
+
+function updateCartUI(){
+  const count = cart.reduce((s,i)=>s+i.qty,0);
+  const countEl = document.getElementById('cartCount');
+  countEl.textContent = count;
+  countEl.classList.toggle('hidden', count===0);
+  renderCartItems();
+}
+
+function renderCartItems(){
+  const container = document.getElementById('cartItems');
+  const footer = document.getElementById('cartFooter');
+  if(cart.length===0){
+    container.innerHTML=`<div class="cart-empty"><div style="font-size:3rem">🛒</div><p>Votre panier est vide</p></div>`;
+    footer.style.display='none';
+    return;
+  }
+  footer.style.display='block';
+  const total = cart.reduce((s,i)=>s+i.price*i.qty,0);
+  container.innerHTML = cart.map(item=>`
+    <div class="cart-item">
+      <div class="cart-item-icon">${item.emoji}</div>
+      <div class="cart-item-info">
+        <div class="cart-item-name">${item.name}</div>
+        <div class="cart-item-detail">${item.detail}${item.flavor?' · '+item.flavor:''}</div>
+      </div>
+      <div class="cart-item-right">
+        <div class="cart-item-price">${formatPrice(item.price*item.qty)}</div>
+        <div class="cart-item-qty">
+          <button class="qty-btn" onclick="changeQty('${item.key}',-1)">−</button>
+          <span class="qty-num">${item.qty}</span>
+          <button class="qty-btn" onclick="changeQty('${item.key}',1)">+</button>
+        </div>
+        <button class="remove-btn" onclick="removeFromCart('${item.key}')">🗑</button>
+      </div>
+    </div>`).join('');
+  document.getElementById('cartTotal').textContent = formatPrice(total);
+}
+
+function openCart(){ document.getElementById('cartDrawer').classList.add('open'); document.getElementById('cartOverlay').classList.add('open'); renderCartItems(); }
+function closeCart(){ document.getElementById('cartDrawer').classList.remove('open'); document.getElementById('cartOverlay').classList.remove('open'); }
+
+function flashBtn(pid){
+  const btn = document.getElementById('addBtn-'+pid);
+  btn.classList.add('added'); btn.innerHTML='<span>✓</span> Ajouté !';
+  setTimeout(()=>{ btn.classList.remove('added'); btn.innerHTML='<span>+</span> Ajouter au panier'; },1500);
+}
+
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2800);
+}
+
+renderProducts();
+</script>
+</body>
+</html>
